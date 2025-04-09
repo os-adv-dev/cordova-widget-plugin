@@ -1,21 +1,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_root"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:id="@+id/widget_root"
-    android:background="@color/cdv_splashscreen_background">
+    android:background="#FFFFFF"
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/widget_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
-        android:padding="4dp"
+        android:textColor="#000000"
         android:textSize="16sp"
-        android:textColor="@android:color/black"
-        android:textStyle="bold"
         android:gravity="center"
-        android:layout_centerInParent="true"
-        android:layout_alignParentTop="true" />
+        android:textStyle="bold"
+        android:padding="8dp" />
 
 </RelativeLayout>

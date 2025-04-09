@@ -38,15 +38,27 @@
           		android:resource="@xml/widget_info" />
 
       		</receiver>
+
+			 <service
+            	android:name="com.outsystems.experts.widget.plugin.WidgetListService"
+            	android:permission="android.permission.BIND_REMOTEVIEWS"
+            	android:exported="false" />
+				
    		</config-file>
 
         <source-file src="src/android/WidgetPlugin.kt" target-dir="app/src/main/kotlin/com/outsystems/experts/widget/plugin/" />
+		<source-file src="src/android/WidgetListService.kt" target-dir="app/src/main/kotlin/com/outsystems/experts/widget/plugin/" />
+		<source-file src="src/android/WidgetData.kt" target-dir="app/src/main/kotlin/com/outsystems/experts/widget/plugin/data/" />
 		<source-file src="src/android/CordovaWidgetProvider.kt" target-dir="app/src/main/kotlin/com/outsystems/experts/widget/plugin/" />
 
 		<resource-file src="src/android/res/layout/cordova_widget.xml" target="res/layout/cordova_widget.xml" />
+		<resource-file src="src/android/res/layout/widget_image.xml" target="res/layout/widget_image.xml" />
+		<resource-file src="src/android/res/layout/widget_list_item.xml" target="res/layout/widget_list_item.xml" />
+		<resource-file src="src/android/res/layout/widget_text_image.xml" target="res/layout/widget_text_image.xml" />
+		<resource-file src="src/android/res/layout/widget_text.xml" target="res/layout/widget_text.xml" />
+		<resource-file src="src/android/res/layout/widget_list.xml" target="res/layout/widget_list.xml" />
+
     	<resource-file src="src/android/res/xml/widget_info.xml" target="res/xml/widget_info.xml" />
-
-
   	</platform>
 
 
