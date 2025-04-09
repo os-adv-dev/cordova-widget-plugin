@@ -1,0 +1,16 @@
+{
+  "name": "cordova-widget-plugin",
+  "version": "1.0.0",
+  "description": "Cordova plugin to update a widget",
+  "cordova": {
+    "id": "com.outsystems.experts.widget.plugin",
+    "platforms": ["android"]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+
+  "author": "Paulo Camilo @ OutSystems",
+  "license": "MIT"
+}
