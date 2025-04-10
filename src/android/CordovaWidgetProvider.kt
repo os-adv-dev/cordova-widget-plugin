@@ -9,12 +9,16 @@ import android.content.Intent
 import android.graphics.*
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.BitmapDrawable
+import android.util.Base64
+import android.util.Log
 import android.widget.RemoteViews
 import com.outsystems.experts.widget.plugin.data.WidgetData
 import org.json.JSONObject
 import com.outsystems.experts.widget.plugin.data.WidgetType
 import androidx.core.graphics.createBitmap
 import org.json.JSONArray
+import java.net.URL
+import java.util.Locale
 
 class CordovaWidgetProvider : AppWidgetProvider() {
 
@@ -124,24 +128,39 @@ class CordovaWidgetProvider : AppWidgetProvider() {
             }
 
             // Apply image
-            if (!data.image.isNullOrEmpty()) {
-                val drawable = context.packageManager.getApplicationIcon(context.packageName)
-                val bitmap = when (drawable) {
-                    is BitmapDrawable -> drawable.bitmap
-                    is AdaptiveIconDrawable -> {
-                        val width = drawable.intrinsicWidth
-                        val height = drawable.intrinsicHeight
-                        val temp = createBitmap(width, height)
-                        val canvas = Canvas(temp)
-                        drawable.setBounds(0, 0, canvas.width, canvas.height)
-                        drawable.draw(canvas)
-                        temp
+            if (data.image != null) {
+                val imageViewId = context.resources.getIdentifier("img", "id", context.packageName)
+                val bitmap = when (data.image.type.uppercase(Locale.ROOT)) {
+                    "BASE_64" -> {
+                        try {
+                            val decodedBytes = Base64.decode(data.image.value, Base64.DEFAULT)
+                            BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                        } catch (e: Exception) {
+                            Log.v("WidgetProvider", "Base64 decoding failed: ${e.message}")
+                            null
+                        }
                     }
-                    else -> createBitmap(1, 1)
+                    "APP_ICON" -> {
+                        val drawable = context.packageManager.getApplicationIcon(context.packageName)
+                        when (drawable) {
+                            is BitmapDrawable -> drawable.bitmap
+                            is AdaptiveIconDrawable -> {
+                                val temp =
+                                    createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight)
+                                val canvas = Canvas(temp)
+                                drawable.setBounds(0, 0, canvas.width, canvas.height)
+                                drawable.draw(canvas)
+                                temp
+                            }
+                            else -> null
+                        }
+                    }
+                    else -> null
                 }
 
-                val id = context.resources.getIdentifier("img", "id", context.packageName)
-                views.setImageViewBitmap(id, bitmap)
+                bitmap?.let {
+                    views.setImageViewBitmap(imageViewId, it)
+                }
             }
 
             val clickIntent = context.packageManager.getLaunchIntentForPackage(context.packageName)
@@ -156,6 +175,22 @@ class CordovaWidgetProvider : AppWidgetProvider() {
             val id = context.resources.getIdentifier("widget_root", "id", context.packageName)
             views.setOnClickPendingIntent(id, pendingIntent)
             manager.updateAppWidget(widgetId, views)
+        }
+
+
+        fun downloadImageToBitmap(urlString: String): Bitmap? {
+            return try {
+                val url = URL(urlString)
+                val connection = url.openConnection()
+                connection.connectTimeout = 5000
+                connection.readTimeout = 5000
+                connection.getInputStream().use { input ->
+                    BitmapFactory.decodeStream(input)
+                }
+            } catch (e: Exception) {
+                Log.e("WidgetProvider", "Image download failed: ${e.message}")
+                null
+            }
         }
     }
 

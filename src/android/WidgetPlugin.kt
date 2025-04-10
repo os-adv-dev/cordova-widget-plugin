@@ -48,7 +48,13 @@ class WidgetPlugin : CordovaPlugin() {
         val json = JSONObject()
         json.put("type", data.type.name)
         data.text?.let { json.put("text", it) }
-        data.image?.let { json.put("image", it) }
+        data.image?.let {
+            val imageJson = JSONObject().apply {
+                put("type", it.type)
+                put("value", it.value)
+            }
+            json.put("image", imageJson)
+        }
         data.items?.let {
             val itemsArray = JSONArray()
             for (item in it) {

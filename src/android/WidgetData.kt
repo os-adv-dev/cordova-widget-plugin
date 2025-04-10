@@ -16,10 +16,15 @@ data class WidgetItem(
     val description: String? = null
 )
 
+data class WidgetImage(
+    val type: String,
+    val value: String
+)
+
 data class WidgetData(
     val type: WidgetType,
     val text: String? = null,
-    val image: String? = null,
+    val image: WidgetImage? = null,
     val items: List<WidgetItem>? = null,
     val textColor: Int? = null,
     val backgroundColor: Int? = null,
@@ -37,7 +42,6 @@ data class WidgetData(
             }
 
             val text = json.optString("text", "")
-            val image = json.optString("image", "")
             val fontSize = if (json.has("fontSize")) json.optInt("fontSize") else null
             val alignment = json.optString("alignment", "0")
             val clickAction = json.optString("clickAction", "")
@@ -56,10 +60,18 @@ data class WidgetData(
             val textColor = parseColorSafely(json.optString("textColor"))
             val backgroundColor = parseColorSafely(json.optString("backgroundColor"))
 
+            val imageObj = if (json.has("image") || json.has("Image")) {
+                val obj = json.getJSONObject("image") ?:  json.getJSONObject("Image")
+                WidgetImage(
+                    type = obj.optString("type", "APP_ICON"),
+                    value = obj.optString("value", "")
+                )
+            } else null
+
             return WidgetData(
                 type = type,
                 text = text,
-                image = image,
+                image = imageObj,
                 items = items,
                 textColor = textColor,
                 backgroundColor = backgroundColor,
