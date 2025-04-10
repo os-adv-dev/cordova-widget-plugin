@@ -47,7 +47,7 @@ Each layout type supports different fields as described below:
 | `textColor`      | `string` | Text color in hex (e.g. `#FFFFFF`)                                          |
 | `backgroundColor`| `string` | Widget background color                                                     |
 | `fontSize`       | `number` | Font size in `sp` (scale-independent pixels)                                |
-| `image`          | `string` | Android image resource name or `ic_launcher` to use app icon                |
+| `image`          | `object` | Object with `type` and `value`. Type can be: `"BASE_64"`, or `"APP_ICON"` |
 | `items`          | `array`  | List of items for `LIST` layout (each item must have `title` and `description`) |
 
 ---
@@ -77,8 +77,22 @@ Shows only an image in the widget (app icon or custom drawable).
 ```json
 {
   "type": "IMAGE",
-  "image": "ic_launcher",
+  "image":  {
+    "type": "APP_ICON",
+    "value": "..." // Depends on type
+  },
   "backgroundColor": "#EEEEEE"
+}
+```
+
+### 🖼️ Image Object Format
+
+You can define an image using the following object format:
+
+```json
+"image": {
+  "type": "BASE_64" | "APP_ICON",
+  "value": "..." // Depends on type
 }
 ```
 
@@ -94,7 +108,10 @@ Displays a block of text followed by an image.
 {
   "type": "TEXT_IMAGE",
   "text": "🔥 Text with image below",
-  "image": "ic_launcher",
+  "image":  {
+    "type": "APP_ICON",
+    "value": "..." // Depends on type
+  },
   "textColor": "#000000",
   "backgroundColor": "#F5F5F5"
 }
